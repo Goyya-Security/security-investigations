@@ -1,0 +1,258 @@
+# Log Analysis Guide
+
+## Overview
+
+Log analysis is a critical component of security monitoring, incident response, threat hunting, and forensic investigations. This guide provides a structured approach for reviewing Linux system logs and identifying suspicious activity.
+
+---
+
+## Key Log Locations
+
+### Authentication Logs
+
+Ubuntu / Debian:
+
+```bash
+/var/log/auth.log
+```
+
+RHEL / CentOS:
+
+```bash
+/var/log/secure
+```
+
+Used to investigate:
+
+* SSH logins
+* Failed authentication attempts
+* Privilege escalation
+* User activity
+
+---
+
+### System Logs
+
+```bash
+/var/log/syslog
+```
+
+or
+
+```bash
+/var/log/messages
+```
+
+Used to investigate:
+
+* Service activity
+* System events
+* Application errors
+* Unexpected behavior
+
+---
+
+## Failed Login Analysis
+
+Review failed SSH authentication attempts:
+
+```bash
+grep "Failed password" /var/log/auth.log
+```
+
+Example indicators:
+
+* Multiple failed logins from a single IP
+* Brute-force attempts
+* Access attempts against non-existent accounts
+
+Count failed attempts:
+
+```bash
+grep "Failed password" /var/log/auth.log | wc -l
+```
+
+---
+
+## Successful Login Analysis
+
+Review successful logins:
+
+```bash
+grep "Accepted password" /var/log/auth.log
+```
+
+Review public key authentication:
+
+```bash
+grep "Accepted publickey" /var/log/auth.log
+```
+
+Investigate:
+
+* Unusual login times
+* New source IP addresses
+* Unexpected user activity
+
+---
+
+## Sudo Activity Review
+
+Review privileged commands:
+
+```bash
+grep "sudo" /var/log/auth.log
+```
+
+Identify:
+
+* Unauthorized privilege escalation
+* Unexpected administrative activity
+* Abuse of elevated permissions
+
+---
+
+## User Account Investigation
+
+Review account changes:
+
+```bash
+grep "useradd" /var/log/auth.log
+grep "usermod" /var/log/auth.log
+```
+
+Investigate:
+
+* New user creation
+* Group modifications
+* Unexpected administrative accounts
+
+---
+
+## Service and Process Investigation
+
+Review service activity:
+
+```bash
+journalctl -xe
+```
+
+Review specific services:
+
+```bash
+journalctl -u ssh
+```
+
+Investigate:
+
+* Service failures
+* Unexpected restarts
+* Suspicious service execution
+
+---
+
+## Network Activity Review
+
+Review active connections:
+
+```bash
+ss -tunap
+```
+
+Investigate:
+
+* Unknown external connections
+* Unexpected listening ports
+* Unusual outbound traffic
+
+---
+
+## Wazuh Alert Validation Workflow
+
+### Step 1
+
+Review alert details:
+
+* Rule ID
+* Severity
+* Source IP
+* Affected asset
+
+### Step 2
+
+Correlate logs:
+
+* Authentication logs
+* System logs
+* Application logs
+
+### Step 3
+
+Validate activity:
+
+Determine whether the event is:
+
+* True Positive
+* False Positive
+* Benign Activity
+
+### Step 4
+
+Document findings and recommendations.
+
+---
+
+## Common Investigation Questions
+
+### Was the login successful?
+
+```bash
+grep "Accepted" /var/log/auth.log
+```
+
+### Were there failed login attempts?
+
+```bash
+grep "Failed password" /var/log/auth.log
+```
+
+### Was sudo used?
+
+```bash
+grep "sudo" /var/log/auth.log
+```
+
+### Were new users created?
+
+```bash
+grep "useradd" /var/log/auth.log
+```
+
+### Are there suspicious services?
+
+```bash
+systemctl list-unit-files
+```
+
+### Are there suspicious network connections?
+
+```bash
+ss -tunap
+```
+
+---
+
+## Investigation Best Practices
+
+* Preserve logs before analysis
+* Document every action performed
+* Correlate multiple log sources
+* Validate alerts before escalation
+* Record findings and recommendations
+* Maintain investigation timelines
+
+---
+
+## Conclusion
+
+Effective log analysis helps identify security incidents, validate alerts, detect malicious activity, and improve overall visibility across Linux environments. Consistent log review combined with security monitoring solutions such as Wazuh significantly improves detection and response capabilities.
