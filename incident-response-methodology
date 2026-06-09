@@ -1,0 +1,59 @@
+# Incident Response Methodology
+
+## Phase 1: Identification
+
+Determine:
+
+* What alert was generated
+* Which assets are affected
+* Severity and scope
+
+## Phase 2: Validation
+
+Verify:
+
+* True positive
+* False positive
+* Benign activity
+
+## Phase 3: Investigation
+
+Review:
+
+* Processes
+* Logs
+* Network activity
+* User activity
+* Persistence mechanisms
+
+## Phase 4: Containment
+
+Actions may include:
+
+* Network isolation
+* User account restrictions
+* Service shutdown
+
+## Phase 5: Eradication
+
+Remove:
+
+* Malicious files
+* Persistence mechanisms
+* Unauthorized accounts
+
+## Phase 6: Recovery
+
+Restore:
+
+* Normal operations
+* Monitoring coverage
+* Security controls
+
+## Phase 7: Lessons Learned
+
+Document:
+
+* Root cause
+* Detection gaps
+* Recommendations
